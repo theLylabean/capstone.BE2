@@ -6,7 +6,7 @@ CREATE TABLE events(
     username TEXT NOT NULL,
     body TEXT NOT NULL,
     user_id INTEGER NOT NULL,
-    created_at TIMESTAMP
+    created_at TIMESTAMP NOT NULL DEFAULT
 )
 
 CREATE TABLE resources(
@@ -14,5 +14,5 @@ CREATE TABLE resources(
     title TEXT NOT NULL,
     body TEXT NOT NULL,
     user_id INTEGER NOT NULL,
-    created_at TIMESTAMP
+    created_at TIMESTAMP NOT NULL DEFAULT
 )
