@@ -12,7 +12,7 @@ export async function getEvents(){
     }
 }
 
-export async function getEventsById(id){
+export async function getEventById(id){
     const sql = `
     SELECT *
     FROM events
