@@ -8,10 +8,10 @@ CREATE TABLE users (
     email TEXT NOT NULL UNIQUE,
     username TEXT NOT NULL UNIQUE,
     password TEXT NOT NULL
-)
+);
 
 CREATE TABLE following (
     following_user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
     followed_user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
     PRIMARY KEY (following_user_id, followed_user_id)
-)
+);
