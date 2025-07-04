@@ -13,9 +13,9 @@ const db = new Pool({
 
 async function runSeeds() {
     try {
-        await usersSeed(db);
-        await seedResources(db);
-        await seedEvents(db);
+        await usersSeed();
+        await seedResources();
+        await seedEvents();
         console.log('🌱 All seed data inserted successfully!');
     } catch (error) {
         console.error('❌ Error seeding data:', error);

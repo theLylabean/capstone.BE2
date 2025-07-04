@@ -7,8 +7,8 @@
   "scripts": {
     "start": "node server.js",
     "dev": "node --watch --env-file=.env server.js",
-    "db:schema": "psql -d lighthaven -f db/finalSchema.sql",
-    "db:seed": "node --env-file=.env db/finalSeed.js",
+    "db:schema": "psql -d lighthaven -f db/schema/finalSchema.sql",
+    "db:seed": "node --env-file=.env db/seed/finalSeed.js",
     "db:reset": "npm run db:schema && npm run db:seed"
   },
   "keywords": [],
