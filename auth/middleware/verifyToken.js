@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import db from '../../db/client.js';
 
-const verifyToken = ( req, res, next ) => {
+export const verifyToken = ( req, res, next ) => {
     const authHeader = req.headers['authorization'];
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
         return res.status(401).json({ error: 'No token provided or malformed header.' });

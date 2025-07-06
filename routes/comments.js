@@ -1,8 +1,13 @@
-const express = require("express");
-const router = express.Router();
-const { getCommentsForPost, addCommentToPost } = require('../controllers/commentsController');
-const authenticate = require('../middleware/authenticate');
+import express from "express";
+import {
+  getCommentsPost,
+  addComment,
+} from "../controllers/commentsController.js";
+import { verifyToken } from "../auth/middleware/verifyToken.js";
 
-router.get('/', getCommentsForPost);
-router.post('/', authenticate, addCommentToPost);
-module.exports = router;
+const router = express.Router();
+
+router.get("/posts/:id/comments", getCommentsPost);
+router.post("/posts/:id/comments", verifyToken, addComment);
+
+export default router;
