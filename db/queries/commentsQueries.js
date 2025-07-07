@@ -1,6 +1,6 @@
-const db = require("../db");
+import db from '../client.js'
 
-async function getCommentsForPost(postId) {
+export async function getCommentsForPostQueries(postId) {
   const query = `
     SELECT comments.*, users.username 
     FROM comments 
@@ -12,7 +12,7 @@ async function getCommentsForPost(postId) {
   return rows;
 }
 
-async function addComment(postId, userId, content) {
+export async function addCommentQueries(postId, userId, content) {
   const query = `
     INSERT INTO comments (post_id, user_id, content)
     VALUES ($1, $2, $3)
@@ -22,7 +22,4 @@ async function addComment(postId, userId, content) {
   return rows[0];
 }
 
-module.exports = {
-  getCommentsForPost,
-  addComment,
-};
+

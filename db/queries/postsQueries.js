@@ -1,6 +1,6 @@
-const db = require('../db');
+import db from '../client.js'
 
-async function getAllPosts() {
+export async function getAllPostsQuery() {
   const query = `
     SELECT posts.*, users.username 
     FROM posts 
@@ -11,7 +11,7 @@ async function getAllPosts() {
   return rows;
 }
 
-async function getPostById(id) {
+export async function getPostByIdQuery(id) {
   const query = `
     SELECT posts.*, users.username 
     FROM posts 
@@ -22,7 +22,7 @@ async function getPostById(id) {
   return rows[0];
 }
 
-async function createPost(userId, title, content, community) {
+export async function createPostQuery(userId, title, content, community) {
   const query = `
     INSERT INTO posts (user_id, title, content, community)
     VALUES ($1, $2, $3, $4)
@@ -31,9 +31,3 @@ async function createPost(userId, title, content, community) {
   const { rows } = await db.query(query, [userId, title, content, community]);
   return rows[0];
 }
-
-module.exports = {
-  getAllPosts,
-  getPostById,
-  createPost
-};
