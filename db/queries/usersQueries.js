@@ -15,6 +15,28 @@ export async function createUsers(first_name, last_name, email, username, passwo
     }
 }
 
+export async function newUsernameCheck(username) {
+    try {
+        const result = await db.query(
+            `SELECT * FROM  users WHERE username =$1`, [username]
+        );
+        return result.rows[0];
+    } catch (error) {
+        console.error('Error creating new user. Username already exists.', error);
+    }
+}
+
+export async function newEmailCheck(email) {
+    try {
+        const result = await db.query(
+            `SELECT * FROM users WHERE email =$1`, [email]
+        );
+        return result.rows[0];
+    } catch (error) {
+        console.error('Error creating new user. Email already exists.', error);
+    }
+}
+
 export async function getLogin(username) {
     try {
         const result = await db.query(
@@ -73,4 +95,3 @@ export async function deleteUser(id) {
         throw error;
     }
 }
-
