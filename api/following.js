@@ -18,7 +18,7 @@ router.post('/:id/follow', verifyToken, async ( req, res, next ) => {
         await followUser(following_user_id, followed_user_id);
         res.status(200).json({ message: 'Followed successfully.' });
      } catch (error) {
-        next(error);
+        console.error(error);
         res.status(500).json({ message: 'Failed to follow user.' })
      }
 });
@@ -38,7 +38,7 @@ router.delete('/:id/unfollow', verifyToken, async ( req, res, next ) => {
         await unfollowUser(following_user_id, followed_user_id);
         res.status(200).json({ message: 'Unfollowed successfully.' });
     } catch (error) {
-        next(error);
+        console.error(error);
         res.status(500).json({ message: 'Failed to unfollow user.' });
     }
 })

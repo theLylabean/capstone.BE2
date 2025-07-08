@@ -8,7 +8,7 @@ export async function createUsers(first_name, last_name, email, username, passwo
             RETURNING *;`,
             [first_name, last_name, email, username, password]
         );
-        return result.rows;
+        return result.rows[0];
     } catch (error) {
         console.error('Error creating user', error);
         throw error;
@@ -22,7 +22,8 @@ export async function newUsernameCheck(username) {
         );
         return result.rows[0];
     } catch (error) {
-        console.error('Error creating new user. Username already exists.', error);
+        console.error('Error checking username.', error.message);
+        throw error;
     }
 }
 
@@ -33,7 +34,8 @@ export async function newEmailCheck(email) {
         );
         return result.rows[0];
     } catch (error) {
-        console.error('Error creating new user. Email already exists.', error);
+        console.error('Error checking email.', error.message);
+        throw error;
     }
 }
 
@@ -43,9 +45,9 @@ export async function getLogin(username) {
             `SELECT * FROM users WHERE username = $1`,
             [username]
         );
-        return result.rows[0];
+        return result;
     } catch (error) {
-        console.error('Error loggin in', error);
+        console.error('Error loggin in', error.message);
         throw error;
     }
 }
@@ -58,7 +60,7 @@ export async function getUserById(id) {
         );
         return result.rows[0];
     } catch (error) {
-        console.error('Error getting user by id'. error);
+        console.error('Error getting user by id', error.message);
         throw error;
     }
 }
@@ -77,7 +79,7 @@ export async function updateUser(id, first_name, last_name, email, password) {
         );
         return result.rows[0];
     } catch (error) {
-        console.error('Error updating user by ID', error);
+        console.error('Error updating user by ID', error.message);
         throw error;
     }
 }
@@ -91,7 +93,7 @@ export async function deleteUser(id) {
         );
         return result.rows[0];
     } catch (error) {
-        console.error('Error deleting user', error);
+        console.error('Error deleting user', error.message);
         throw error;
     }
 }

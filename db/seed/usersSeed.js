@@ -36,6 +36,6 @@ export async function usersSeed() {
                 console.log("Seeded users:", result.rows);
         console.log('🌱 Database seeded.');
     } catch (error) {
-        console.error('❌ Seeding failed:', err);
+        console.error('❌ Seeding failed:', error);
     } 
 }
