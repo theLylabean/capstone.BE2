@@ -1,5 +1,5 @@
 import express from 'express';
-import { createUsers, newEmailCheck, newUsernameCheck } from '../db/queries/usersQueries';
+import { createUsers, newEmailCheck, newUsernameCheck } from '../db/queries/usersQueries.js';
 const router = express.Router();
 const SECRET = process.env.JWT_SECRET;
 
