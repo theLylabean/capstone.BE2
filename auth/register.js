@@ -21,6 +21,7 @@ router.post('/', newUsernameCheck, newEmailCheck, async( req, res, next ) => {
         })
     } catch (error) {
         next(error);
+        res.status(500).json({ message: 'Failed to register new User' });
     }
 });
 
