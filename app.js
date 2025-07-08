@@ -1,8 +1,10 @@
 import db from "./db/client.js";
-import authRouter from './auth/index.js';
 import express from "express";
 import postsRouter from "./routes/posts.js";
 import commentsRouter from "./routes/comments.js";
+import authRouter from './auth/index.js';
+import dotenv from 'dotenv';
+dotenv.config();
 const app = express();
 export default app;
 
