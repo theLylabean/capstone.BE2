@@ -3,6 +3,8 @@ import express from "express";
 import postsRouter from "./routes/posts.js";
 import commentsRouter from "./routes/comments.js";
 import authRouter from './auth/index.js';
+import eventsRouter from './api/events.js';
+import resourcesRouter from './api/resources.js';
 import dotenv from 'dotenv';
 dotenv.config();
 const app = express();
