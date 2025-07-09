@@ -8,7 +8,6 @@ dotenv.config();
 const app = express();
 export default app;
 
-await db.connect();
 
 app.use(express.json());
 app.use((req, res, next) => {

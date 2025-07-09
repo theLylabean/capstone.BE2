@@ -6,11 +6,7 @@ import { usersSeed } from "./usersSeed.js";
 import { seedResources, seedEvents } from "./eventResourcesSeed.js";
 import { seedPosts } from "./postsSeed.js";
 import { commentSeed } from "./commentSeed.js";
-
-const { Pool } = pg;
-const db = new Pool({
-  connectionString: process.env.DATABASE_URL,
-});
+import db from "../client.js";
 
 async function runSeeds() {
   try {

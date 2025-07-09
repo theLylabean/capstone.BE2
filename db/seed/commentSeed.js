@@ -1,4 +1,4 @@
-import pool from '../../db/client.js'
+import db from '../../db/client.js'
 
 export async function commentSeed() {
   try {
@@ -22,7 +22,7 @@ export async function commentSeed() {
       "Gardening brings people together. Love it!",
     ];
 
-    const { rows } = await pool.query(insertQuery, value);
+    const { rows } = await db.query(insertQuery, value);
     console.log("Insert comments:", rows);
   } catch (error) {
     console.log("Error Seeding comments!!");

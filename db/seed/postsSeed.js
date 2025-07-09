@@ -1,4 +1,4 @@
-import pool from "../../db/client.js";
+import db from "../../db/client.js";
 
 export async function seedPosts() {
   try {
@@ -21,7 +21,7 @@ export async function seedPosts() {
       "Gardening",
     ];
 
-    const { rows } = await pool.query(insertQuery, values);
+    const { rows } = await db.query(insertQuery, values);
     console.log("Seeded Posts:", rows);
   } catch (error) {
     console.log("Error Seeding Posts:", error);
