@@ -1,6 +1,6 @@
 import express from 'express';
-import verifyToken from '../auth/middleware/verifyToken';
-import { followUser, unfollowUser } from '../db/queries/followingQueries';
+import verifyToken from '../auth/middleware/verifyToken.js';
+import { followUser, unfollowUser } from '../db/queries/followsQueries.js';
 const router = express.Router();
 
 router.post('/:id/follow', verifyToken, async ( req, res, next ) => {
@@ -19,13 +19,13 @@ router.post('/:id/follow', verifyToken, async ( req, res, next ) => {
         res.status(200).json({ message: 'Followed successfully.' });
      } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'Failed to follow user.' })
+        res.status(500).json({ message: 'Failed to follow user.' });
      }
 });
 
 router.delete('/:id/unfollow', verifyToken, async ( req, res, next ) => {
-    following_user_id = req.user.id;
-    followed_user_id = parseInt(req.params.id);
+    const following_user_id = req.user.id;
+    const followed_user_id = parseInt(req.params.id);
 
     if (!following_user_id || isNaN(followed_user_id)) {
         return res.status(400).json({ error: 'Missing or invalid user ID.' });
