@@ -18,7 +18,7 @@ router.get('/:id', verifyToken, async ( req, res, next ) => {
     }
 })
 
-import validator from 'validator'; // npm install validator if needed
+import validator from 'validator';
 
 router.put('/:id', verifyToken, async (req, res, next) => {
   const { id } = req.params;
