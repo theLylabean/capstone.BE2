@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.get('/:id', verifyToken, async ( req, res, next ) => {
     try {
-        const { id } = req.params.id;
+        const { id } = req.params;
         const user = await getUserById(id);
         console.log('User from DB:', user);
         if (!user) {
@@ -13,29 +13,91 @@ router.get('/:id', verifyToken, async ( req, res, next ) => {
         }
         res.json(user);
     } catch (error) {
-        console.error('❌ Error in /auth/account/:id route:', error);
+        console.error('❌ Error in /auth/account/:id route:', error.message);
         res.status(500).json({ message: 'Failed to get user by ID.' });
     }
 })
 
-router.put('/:id', verifyToken, async ( req, res, next ) => {
-    try {
-        const { username, password } = req.body;
-        const { id } = req.params.id;
-        if ( !username || !password ) {
-            return res.status(400).json({ message: 'Username and password required.' });
-        }
-        const hashedPassword = await bcrypt.hash(password, 10);
-        const updatedUser = await updateUser(id, username, hashedPassword);
-        if (!updatedUser) {
-            return res.status(404).json({ message: 'User not found' });
-        }
-        res.json(updatedUser);
-    } catch (error) {
-        console.error('❌ Error in /auth/account/:id route:', error);
-        res.status(500).json({ message: 'Failed to update user.' });
+import validator from 'validator'; // npm install validator if needed
+
+router.put('/:id', verifyToken, async (req, res, next) => {
+  const { id } = req.params;
+  const { first_name, last_name, email, username, password } = req.body;
+  try {
+    if (username) {
+      return res.status(400).json({ message: 'Username cannot be changed.' });
     }
+    if (!first_name && !last_name && !email && !password) {
+      return res.status(400).json({ message: 'Please include at least one field to update.' });
+    }
+    if (first_name && !validator.matches(first_name, /^[a-zA-Z]+$/)) {
+      return res.status(400).json({ message: 'First name can only contain letters.' });
+    }
+    if (last_name && !validator.matches(last_name, /^[a-zA-Z]+$/)) {
+      return res.status(400).json({ message: 'Last name can only contain letters.' });
+    }
+    if (email && !validator.isEmail(email)) {
+      return res.status(400).json({ message: 'Invalid email format.' });
+    }
+    let hashedPassword;
+    if (password) {
+      if (!validator.isStrongPassword(password)) {
+        return res.status(400).json({
+          message:
+            'Password must be at least 8 characters long and include a number, a symbol, an uppercase, and a lowercase letter.',
+        });
+      }
+      hashedPassword = await bcrypt.hash(password, 10);
+    }
+    const updatedUser = await updateUser({
+      id,
+      first_name,
+      last_name,
+      email,
+      password: hashedPassword,
+    });
+    if (!updatedUser) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    res.json(updatedUser);
+  } catch (error) {
+    console.error('❌ Error in /auth/account/:id route:', error.message);
+    res.status(500).json({ message: 'Failed to update user.' });
+  }
 });
+
+router.delete('/:id', verifyToken, async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const deletedUser = await deleteUser(id);
+    if (!deletedUser) {
+      return res.status(404).json({ message: 'User not found.' });
+    }
+    return res.json({ message: 'User deleted successfully.' });
+  } catch (error) {
+    console.error('❌ Error in DELETE /auth/account/:id:', error.message);
+    return res.status(500).json({ message: 'Failed to delete user.' });
+  }
+});
+
+// router.put('/:id', verifyToken, async ( req, res, next ) => {
+//     try {
+//         const { first_name, last_name, email, username, password } = req.body;
+//         const { id } = req.params;
+//         if ( !username || !password ) {
+//             return res.status(400).json({ message: 'Username and password required.' });
+//         }
+//         const hashedPassword = await bcrypt.hash(password, 10);
+//         const updatedUser = await updateUser(id, username, hashedPassword);
+//         if (!updatedUser) {
+//             return res.status(404).json({ message: 'User not found' });
+//         }
+//         res.json(updatedUser);
+//     } catch (error) {
+//         console.error('❌ Error in /auth/account/:id route:', error.message);
+//         res.status(500).json({ message: 'Failed to update user.' });
+//     }
+// });
 
 // router.delete('/:id', verifyToken, async ( req, res, next ) => {
 //     try {
@@ -49,19 +111,5 @@ router.put('/:id', verifyToken, async ( req, res, next ) => {
 //         res.status(500).json({ message: 'Failed to delete user.' });
 //     }
 // });
-
-router.delete('/:id', verifyToken, async (req, res, next) => {
-  try {
-    const { id } = req.params.id;
-    const deletedUser = await deleteUser(id);
-    if (!deletedUser) {
-      return res.status(404).json({ message: 'User not found.' });
-    }
-    return res.json({ message: 'User deleted successfully.' });
-  } catch (error) {
-    return res.status(500).json({ message: 'Failed to delete user.' });
-  }
-});
-
 
 export default router;
