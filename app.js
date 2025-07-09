@@ -1,4 +1,3 @@
-import db from "./db/client.js";
 import express from "express";
 import postsRouter from "./routes/posts.js";
 import commentsRouter from "./routes/comments.js";
