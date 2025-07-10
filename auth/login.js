@@ -23,9 +23,6 @@ router.post('/', async (req, res, next) => {
         if ( !isPWMatch ) {
             return res.status(401).json({ message: 'Incorrect password. Please try again.' })
         }
-        const SECRET = process.env.JWT_SECRET;
-        console.log("JWT_SECRET inside route:", SECRET);
-
         if (!SECRET) {
             return res.status(500).json({ message: 'JWT secret is missing on server.' });
         }

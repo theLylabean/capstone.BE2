@@ -6,6 +6,7 @@ import eventsRouter from './api/events.js';
 import resourcesRouter from './api/resources.js';
 import followRouter from './api/follows.js'
 import dotenv from 'dotenv';
+import cors from 'cors';
 dotenv.config();
 const app = express();
 export default app;
@@ -16,6 +17,7 @@ app.use((req, res, next) => {
   console.log(req.method, req.originalUrl);
   next();
 });
+app.use(cors());
 
 app.use("/auth", authRouter);
 app.use('/api/follows', followRouter);
