@@ -65,17 +65,37 @@ export async function getUserById(id) {
     }
 }
 
-export async function updateUser(id, first_name, last_name, email, password) {
+export async function updateUser({id, first_name, last_name, email, password}) {
+    console.log(id, first_name, last_name, email, password);
     try {
+        const fields = [];
+        const values = [];
+        let paramIdx = 1;
+        if (first_name) {
+            fields.push(`first_name = $${paramIdx++}`);
+            values.push(first_name)
+        }
+        if (last_name) {
+            fields.push(`last_name = $${paramIdx++}`);
+            values.push(last_name);
+        }
+        if (email) {
+            fields.push(`email = $${paramIdx++}`);
+            values.push(email);
+        }
+        if (password) {
+            fields.push(`password = $${paramIdx++}`);
+            values.push(password);
+        }
+        if (fields.length === 0) {
+            throw new Error('No fields provided to update.');
+        }
         const result = await db.query(
             `UPDATE users SET
-                first_name = $1,
-                last_name = $2,
-                email = $3,
-                password = $4
-            WHERE id = $5
+                ${fields.join(', ')}
+            WHERE id = $${paramIdx}
             RETURNING *;`,
-            [first_name, last_name, email, password, id]
+            [...values, id]
         );
         return result.rows[0];
     } catch (error) {
