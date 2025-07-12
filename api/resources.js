@@ -37,12 +37,12 @@ router.get("/:id", async (req, res, next) => {
 
 router.post("/", async (req, res, next) => {
     try{
-        const {username, body, user_id} = req.body;
-        if(!username || !body || !user_id){
+        const {title, body, user_id} = req.body;
+        if(!title || !body || !user_id){
             return res.status(400).send({error: "Missing required fields"});
         }
 
-        const resource = await createResource({username, body, user_id});
+        const resource = await createResource({title, body, user_id});
         return res.status(201).send(resource);
 
     }catch(err){
@@ -59,8 +59,8 @@ router.put("/:id", async (req, res, next) => {
             return res.status(400).send({error: "Please provide a valid ID"});
         }
 
-        const {username, body, user_id} = req.body;
-        if(!username || !body || !user_id){
+        const {title, body, user_id} = req.body;
+        if(!title || !body || !user_id){
             return res.status(400).send({error: "Missing required fields"});
         }
 
@@ -69,7 +69,7 @@ router.put("/:id", async (req, res, next) => {
             return res.status(404).send({error: "Resource does not exist"});
         }
 
-        const updated = await updateResource({id, username, body, user_id});
+        const updated = await updateResource({id, title, body, user_id});
         res.status(200).send(updated);
 
     }catch(err){
