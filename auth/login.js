@@ -27,12 +27,12 @@ router.post('/', async (req, res, next) => {
             return res.status(500).json({ message: 'JWT secret is missing on server.' });
         }
         const token = jwt.sign(
-            { id: user.id, username: user.username }, SECRET
+            { id: user.id, firstName: user.first_name, lastName: user.last_name, email: user.email, username: user.username }, SECRET
         );
         res.json({
             token,
             user:
-            { id: user.id, username: user.username }
+            { id: user.id, firstName: user.first_name, lastName: user.last_name, email: user.email, username: user.username }
         });
     } catch (error) {
         console.error(error);

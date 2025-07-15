@@ -5,11 +5,20 @@ import verifyToken from './middleware/verifyToken.js';
 import { deleteUser, getUserById, updateUser } from '../db/queries/usersQueries.js';
 const router = express.Router();
 
+router.get('/', verifyToken, async ( req, res, next ) => {
+  try {
+    const user = req.user;
+    res.status(201).json(user);
+  } catch (error) {
+    console.error(error)
+    res.json(error);
+  }
+})
+
 router.get('/:id', verifyToken, async ( req, res, next ) => {
     try {
         const { id } = req.params;
         const user = await getUserById(id);
-        console.log('User from DB:', user);
         if (!user) {
             return res.status(404).json({ message: 'User not found.' });
         }
