@@ -22,7 +22,7 @@ app.use(cors());
 app.use("/auth", authRouter);
 app.use('/api/follows', followRouter);
 app.use("/api/posts", postsRouter);
-app.use('/api/comments', commentsRouter);
+app.use('/api/posts', commentsRouter);
 app.use('/api/events', eventsRouter);
 app.use('/api/resources', resourcesRouter);
 
