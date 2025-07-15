@@ -3,6 +3,7 @@ const router = express.Router();
 export default router;
 
 import {getResources, getResourceById, createResource, updateResource, deleteResource} from '../db/queries/resources.js';
+import verifyToken from "../auth/middleware/verifyToken.js";
 
 router.get("/", async (req, res, next) => {
     try{
@@ -35,7 +36,7 @@ router.get("/:id", async (req, res, next) => {
     }
 });
 
-router.post("/", async (req, res, next) => {
+router.post("/", verifyToken, async (req, res, next) => {
     try{
         const {title, body, user_id} = req.body;
         if(!title || !body || !user_id){
@@ -51,7 +52,7 @@ router.post("/", async (req, res, next) => {
     }
 });
 
-router.put("/:id", async (req, res, next) => {
+router.put("/:id", verifyToken, async (req, res, next) => {
     try{
         const id = Number(req.params.id);
 
@@ -78,7 +79,7 @@ router.put("/:id", async (req, res, next) => {
     }
 });
 
-router.delete("/:id", async (req, res, next) => {
+router.delete("/:id", verifyToken, async (req, res, next) => {
     try{
         const id = Number(req.params.id);
         if(!Number.isInteger(id) || id < 0){
