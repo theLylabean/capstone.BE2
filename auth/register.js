@@ -7,7 +7,6 @@ const router = express.Router();
 const SECRET = process.env.JWT_SECRET;
 
 router.post('/', async( req, res, next ) => {
-    const { id } = req.params;
     const { first_name, last_name, email, username, password } = req.body;
     try {
         const existingUsername = await newUsernameCheck(username);
@@ -39,7 +38,7 @@ router.post('/', async( req, res, next ) => {
         }
         const newUser = await createUsers(first_name, last_name, email, username, hashedPassword);
         const token = jwt.sign(
-            { id: newUser.id, username: newUser.username }, SECRET 
+            { id: newUser.id, firstName: newUser.first_name, lastName: newUser.last_name, email: newUser.email, username: newUser.username }, SECRET 
         );
         res.status(201).json({
             token,
