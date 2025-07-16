@@ -32,9 +32,9 @@ export async function usersSeed() {
                     'drjustus',
                     justinpassword
                 ]);
-                const result = await db.query(`SELECT * FROM users`);
-                console.log("Seeded users:", result.rows);
-        console.log('🌱 Database seeded.');
+                // const result = await db.query(`SELECT * FROM users`);
+                // console.log("Seeded users:", result.rows);
+                console.log('🌱 Users Database seeded.');
     } catch (error) {
         console.error('❌ Seeding failed:', error);
     } 
