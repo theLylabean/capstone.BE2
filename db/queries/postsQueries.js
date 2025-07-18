@@ -31,3 +31,4 @@ export async function createPostQuery(userId, title, content, community) {
   const { rows } = await db.query(query, [userId, title, content, community]);
   return rows[0];
 }
+
