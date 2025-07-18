@@ -1,21 +1,21 @@
 import express from 'express';
 import verifyToken from '../auth/middleware/verifyToken.js';
-import { followUser, getFollowers, getFollowing, unfollowUser } from '../db/queries/followsQueries.js';
+import { followUser, getFollowers, getFollowing, getFollowStatus, unfollowUser } from '../db/queries/followsQueries.js';
 const router = express.Router();
 
 router.post('/:id/follow', verifyToken, async ( req, res, next ) => {
-    const following_user_id = req.user.id;
-    const followed_user_id = parseInt(req.params.id);
+    const followingUserId = req.user.id;
+    const followedUserId = parseInt(req.params.id);
 
-    if (!following_user_id || isNaN(followed_user_id)) {
+    if (!followingUserId || isNaN(followedUserId)) {
         return res.status(400).json({ error: 'Missing or invalid user ID.' });
     }
 
-    if (following_user_id === followed_user_id) {
+    if (followingUserId === followedUserId) {
         return res.status(400).json({ error: 'You cannot follow yourself.' });
     }
      try {
-        await followUser(following_user_id, followed_user_id);
+        await followUser(followingUserId, followedUserId);
         res.status(200).json({ message: 'Followed successfully.' });
      } catch (error) {
         console.error(error);
@@ -24,18 +24,18 @@ router.post('/:id/follow', verifyToken, async ( req, res, next ) => {
 });
 
 router.delete('/:id/unfollow', verifyToken, async ( req, res, next ) => {
-    const following_user_id = req.user.id;
-    const followed_user_id = parseInt(req.params.id);
+    const followingUserId = req.user.id;
+    const followedUserId = parseInt(req.params.id);
 
-    if (!following_user_id || isNaN(followed_user_id)) {
+    if (!followingUserId || isNaN(followedUserId)) {
         return res.status(400).json({ error: 'Missing or invalid user ID.' });
     }
 
-    if (following_user_id === followed_user_id) {
+    if (followingUserId === followedUserId) {
         return res.status(400).json({ error: 'You cannot follow yourself.' });
     }
     try {
-        await unfollowUser(following_user_id, followed_user_id);
+        await unfollowUser(followingUserId, followedUserId);
         res.status(200).json({ message: 'Unfollowed successfully.' });
     } catch (error) {
         console.error(error);
@@ -44,12 +44,12 @@ router.delete('/:id/unfollow', verifyToken, async ( req, res, next ) => {
 })
 
 router.get('/:id/following', verifyToken, async ( req, res, next ) => {
-    const following_user_id = req.user.id;
-    if (!following_user_id) {
-        return res.status(400).json({ error: 'Missing or invalid following_user_id' })
+    const followingUserId = req.user.id;
+    if (!followingUserId) {
+        return res.status(400).json({ error: 'Missing or invalid followingUserId' })
     }
     try {
-        await getFollowing(following_user_id);
+        await getFollowing(followingUserId);
         res.status(200).json({ message: 'Success retrieving following list.' });
     } catch (error) {
         console.error(error);
@@ -58,16 +58,32 @@ router.get('/:id/following', verifyToken, async ( req, res, next ) => {
 })
 
 router.get('/:id/followers', verifyToken, async ( req, res, next ) => {
-    const followed_user_id = req.params.id;
-    if (!followed_user_id) {
-        return res.status(400).json({ error: 'Missing or invalid followed_user_id' });
+    const followedUserId = req.params.id;
+    if (!followedUserId) {
+        return res.status(400).json({ error: 'Missing or invalid followedUserId' });
     }
     try {
-        await getFollowers(followed_user_id);
+        await getFollowers(followedUserId);
         res.status(200).json({ message: 'Success retrieving followers list.' });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Failed to retrieve followed list.' });
     }
 })
+
+router.get('/:targetUserId/status', verifyToken, async ( req, res, next ) => {
+    const currentUserId = req.user.id;
+    const targetUserId = parseInt(req.params.targetUserId);
+    if (currentUserId === targetUserId) {
+        return res.status(400).json({ message: 'You cannot follow yourself.' })
+    }
+    try {
+        const isFollowing = await getFollowStatus(currentUserId, targetUserId);
+        res.json({ isFollowing });
+    } catch (error) {
+        console.error('Error checking follows status: ', error);
+        res.status(500).json({ error: 'Failed to check follow status.' });
+    }
+});
+
 export default router;
