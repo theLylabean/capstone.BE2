@@ -21,6 +21,8 @@ export async function getEventById(id){
 
     try {
         const { rows } = await db.query(sql, [id]);
+        
+        //[id] - parameterized array: specific to sql and sanitizes it and turns it into a string and make sure no one can sql injection your db)
         return rows[0];
     } catch (err) {
         console.error('Event not found:', err);
