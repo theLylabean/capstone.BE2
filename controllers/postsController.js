@@ -24,7 +24,7 @@ export async function getPostbyId(req, res) {
 
 export async function createPosts(req, res) {
   try {
-    const userId = req.params.id;
+    const userId = req.user.id;
     const { title, content, community } = req.body;
     if (!title || !content || !community) {
       return res.status(400).json({ error: "All fields are required." });

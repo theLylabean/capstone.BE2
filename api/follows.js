@@ -49,8 +49,8 @@ router.get('/:id/following', verifyToken, async ( req, res, next ) => {
         return res.status(400).json({ error: 'Missing or invalid followingUserId' })
     }
     try {
-        await getFollowing(followingUserId);
-        res.status(200).json({ message: 'Success retrieving following list.' });
+        const followingList = await getFollowing(followingUserId);
+        res.status(200).json(followingList);
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Failed to retrieve following list.' });
@@ -63,8 +63,8 @@ router.get('/:id/followers', verifyToken, async ( req, res, next ) => {
         return res.status(400).json({ error: 'Missing or invalid followedUserId' });
     }
     try {
-        await getFollowers(followedUserId);
-        res.status(200).json({ message: 'Success retrieving followers list.' });
+        const followerList = await getFollowers(followedUserId);
+        res.status(200).json(followerList);
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Failed to retrieve followed list.' });

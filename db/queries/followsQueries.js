@@ -36,12 +36,13 @@ export async function unfollowUser(followingUserId, followedUserId) {
 export async function getFollowers(followedUserId) {
     try {
         const result = await db.query(
-            `SELECT * FROM users WHERE
-            followed_user_id = $1
-            RETURNING *;`,
-            [followedUserId]
+            `SELECT users.id, users.username
+            FROM following
+            JOIN users ON following.following_user_id = users.id
+            WHERE following.followed_user_id = $1
+            `, [followedUserId]
         );
-        return result.rows[0];
+        return result.rows;
     } catch (error) {
         console.error('Error getting followers.', error);
         throw error;
@@ -52,12 +53,13 @@ export async function getFollowers(followedUserId) {
 export async function getFollowing(followingUserId) {
     try {
         const result = await db.query(
-            `SELECT * FROM users WHERE
-            following_user_id = $1
-            RETURNING *;`,
-            [followingUserId]
+            `SELECT users.id, users.username
+            FROM following
+            JOIN users ON following.followed_user_id = users.id
+            WHERE following.following_user_id = $1
+            `, [followingUserId]
         );
-        return result.rows[0];
+        return result.rows;
     } catch (error) {
         console.error('Error getting following list.', error);
     }
