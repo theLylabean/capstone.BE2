@@ -1,12 +1,12 @@
 import db from '../client.js';
 
-export async function followUser(following_user_id, followed_user_id) {
+export async function followUser(followingUserId, followedUserId) {
     try {
         const result = await db.query(
             `INSERT INTO following (following_user_id, followed_user_id)
             VALUES ($1, $2)
             RETURNING *;`,
-            [following_user_id, followed_user_id]
+            [followingUserId, followedUserId]
         );
         return result.rows[0];
     } catch (error) {
@@ -15,7 +15,7 @@ export async function followUser(following_user_id, followed_user_id) {
     }
 }
 
-export async function unfollowUser(following_user_id, followed_user_id) {
+export async function unfollowUser(followingUserId, followedUserId) {
     try {
         const result = await db.query(
             `DELETE FROM following WHERE
@@ -23,7 +23,7 @@ export async function unfollowUser(following_user_id, followed_user_id) {
                 AND
                 followed_user_id = $2
                 RETURNING *;`,
-                [following_user_id, followed_user_id]
+                [followingUserId, followedUserId]
         );
         return result.rows[0];
     } catch (error) {
@@ -33,15 +33,16 @@ export async function unfollowUser(following_user_id, followed_user_id) {
 }
 
 // who is following the user...what was i thinking when i named these seriously
-export async function getFollowers(followed_user_id) {
+export async function getFollowers(followedUserId) {
     try {
         const result = await db.query(
-            `SELECT * FROM users WHERE
-            followed_user_id = $1
-            RETURNING *;`,
-            [followed_user_id]
+            `SELECT users.id, users.username
+            FROM following
+            JOIN users ON following.following_user_id = users.id
+            WHERE following.followed_user_id = $1
+            `, [followedUserId]
         );
-        return result.rows[0];
+        return result.rows;
     } catch (error) {
         console.error('Error getting followers.', error);
         throw error;
@@ -49,16 +50,33 @@ export async function getFollowers(followed_user_id) {
 }
 
 // who the user is following...why i named it this idk.
-export async function getFollowing(following_user_id) {
+export async function getFollowing(followingUserId) {
     try {
         const result = await db.query(
-            `SELECT * FROM users WHERE
-            following_user_id = $1
-            RETURNING *;`,
-            [following_user_id]
+            `SELECT users.id, users.username
+            FROM following
+            JOIN users ON following.followed_user_id = users.id
+            WHERE following.following_user_id = $1
+            `, [followingUserId]
         );
-        return result.rows[0];
+        return result.rows;
     } catch (error) {
         console.error('Error getting following list.', error);
+    }
+}
+
+export async function getFollowStatus(followingUserId, followedUserId) {
+    try {
+        const result = await db.query(
+            `SELECT EXISTS (
+            SELECT 1
+            FROM following
+            WHERE following_user_id = $1 AND followed_user_id = $2
+            )`,
+            [followingUserId, followedUserId]
+        );
+        return result.rows[0].exists; //returns a boolean
+    } catch (error) {
+        console.error('Error getting follow status.', error);
     }
 }
